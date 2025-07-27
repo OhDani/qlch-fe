@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
-import { getProducts } from "../../../services/productService";
+// import { useEffect, useState } from "react";
+// import { getProducts } from "../../../services/productService";
 
-const useProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+// const useProducts = () => {
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await getProducts();
-        setProducts(res);
-      } catch (err) {
-        console.error("Failed to load products", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+//   useEffect(() => {
+//     const fetch = async () => {
+//       try {
+//         const res = await getProducts();
+//         setProducts(res);
+//       } catch (err) {
+//         console.error("Failed to load products", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
 
-    fetch();
-  }, []);
+//     fetch();
+//   }, []);
 
-  return { products, loading };
-};
+//   return { products, loading };
+// };
 
-export default useProducts;
+// export default useProducts;

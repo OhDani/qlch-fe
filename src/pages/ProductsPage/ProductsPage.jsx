@@ -19,12 +19,6 @@ const ProductsPage = () => {
                   <a href="#" className="text-indigo-600 border-b-2 border-indigo-600 py-2 px-1 text-sm font-medium">
                     Tất cả sản phẩm
                   </a>
-                  <a href="#" className="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
-                    Danh mục
-                  </a>
-                  <a href="#" className="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
-                    Kho hàng
-                  </a>
                 </nav>
               </div>
             </div>
@@ -70,13 +64,6 @@ const ProductsPage = () => {
               <option>Phụ kiện</option>
             </select>
 
-            {/* Stock Filter */}
-            <select className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option>Tất cả trạng thái</option>
-              <option>Còn hàng</option>
-              <option>Hết hàng</option>
-              <option>Sắp hết</option>
-            </select>
           </div>
         </div>
 
