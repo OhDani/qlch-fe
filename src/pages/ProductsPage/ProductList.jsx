@@ -1,53 +1,48 @@
+// src/pages/ProductsPage/ProductList.jsx
 import React, { useState, useContext, useMemo } from "react";
 import { ProductContext } from "../../contexts/ProductContext";
+import { useCategories } from "../../contexts/CategoryContext";
 import ProductCard from "./ProductCard";
 
 const ProductList = () => {
   const { products, deleteProduct, loading } = useContext(ProductContext);
+  const { categories } = useCategories();
   
-  // States cho tìm kiếm và lọc
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [stockFilter, setStockFilter] = useState('');
   const [sortBy, setSortBy] = useState('name-asc');
   const [viewMode, setViewMode] = useState('grid');
 
-  // Lấy danh sách categories duy nhất từ products
-  const categories = useMemo(() => {
-    const uniqueCategories = [];
-    const categoryMap = new Map();
-    
-    products.forEach(product => {
-      if (product.category && !categoryMap.has(product.category.id)) {
-        categoryMap.set(product.category.id, product.category);
-        uniqueCategories.push(product.category);
-      }
-    });
-    
-    return uniqueCategories.sort((a, b) => a.name.localeCompare(b.name));
-  }, [products]);
+  // Helper function to get category name
+  const getCategoryName = (categoryId) => {
+    const category = categories.find(c => c.id === categoryId);
+    return category ? category.name : 'Chưa phân loại';
+  };
 
-  // Lọc và sắp xếp products
+  // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products.filter(product => {
-      // Tìm kiếm theo tên hoặc mô tả
+      // Search filter
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
       
-      // Lọc theo danh mục - sử dụng category.id thay vì categoryId
+      // Category filter - check both product.categoryId and product.category.id
       const matchesCategory = !selectedCategory || 
-                             (product.category && product.category.id === parseInt(selectedCategory));
+                             product.categoryId === selectedCategory ||
+                             (product.category && product.category.id === selectedCategory);
       
-      // Lọc theo trạng thái kho
-      const matchesStock = !stockFilter || 
-        (stockFilter === 'in-stock' && product.quantity > 0) ||
-        (stockFilter === 'out-of-stock' && product.quantity === 0) ||
-        (stockFilter === 'low-stock' && product.quantity > 0 && product.quantity < 10);
+      // Stock filter
+      // const matchesStock = !stockFilter || 
+      //   (stockFilter === 'in-stock' && product.quantity > 0) ||
+      //   (stockFilter === 'out-of-stock' && product.quantity === 0) ||
+      //   (stockFilter === 'low-stock' && product.quantity > 0 && product.quantity < 10);
 
-      return matchesSearch && matchesCategory && matchesStock;
+      return matchesSearch && matchesCategory;
+      // && matchesStock;
     });
 
-    // Sắp xếp
+    // Sort products
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'name-asc':
@@ -70,14 +65,19 @@ const ProductList = () => {
     });
 
     return filtered;
-  }, [products, searchTerm, selectedCategory, stockFilter, sortBy]);
+  }, [products, searchTerm, selectedCategory
+    // , stockFilter
+    , sortBy]);
 
-  // Đếm sản phẩm theo category
+  // Count products by category
   const getProductCountByCategory = (categoryId) => {
-    return products.filter(p => p.category && p.category.id === categoryId).length;
+    return products.filter(p => 
+      p.categoryId === categoryId || 
+      (p.category && p.category.id === categoryId)
+    ).length;
   };
 
-  // Reset tất cả bộ lọc
+  // Reset filters
   const clearAllFilters = () => {
     setSearchTerm('');
     setSelectedCategory('');
@@ -85,7 +85,6 @@ const ProductList = () => {
     setSortBy('name-asc');
   };
 
-  // Kiểm tra có filter active không
   const hasActiveFilters = searchTerm || selectedCategory || stockFilter || sortBy !== 'name-asc';
 
   if (loading) {
@@ -217,16 +216,14 @@ const ProductList = () => {
           </div>
         </div>
 
-        {/* Active Filters & Results */}
+        {/* Results & Filters */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {/* Results Count */}
             <span className="text-sm text-gray-600">
               Hiển thị <span className="font-semibold text-indigo-600">{filteredAndSortedProducts.length}</span> 
               {" "}trên <span className="font-semibold">{products.length}</span> sản phẩm
             </span>
 
-            {/* Active Filters */}
             {hasActiveFilters && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-yellow-600 flex items-center gap-1">
@@ -262,7 +259,7 @@ const ProductList = () => {
             
             {selectedCategory && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Danh mục: {categories.find(c => c.id.toString() === selectedCategory)?.name}
+                Danh mục: {getCategoryName(selectedCategory)}
                 <button onClick={() => setSelectedCategory('')} className="ml-2">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -337,8 +334,8 @@ const ProductList = () => {
               key={product.id}
               product={product}
               onDelete={() => deleteProduct(product.id)}
-              onEdit={() => console.log('Edit product:', product.id)}
               viewMode={viewMode}
+              getCategoryName={getCategoryName}
             />
           ))}
         </div>

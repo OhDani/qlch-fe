@@ -8,49 +8,68 @@ export const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  /* lấy danh sách sản phẩm */
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const data = await productService.getAll(); // chỉ dùng getAll hiện có
-      setProducts(data);
+      setError(null);
+      const data = await productService.getAll();
+      console.log('🔍 Fetched products:', data);
+      setProducts(data || []);
     } catch (err) {
-      console.error(err);
+      console.error('❌ Error fetching products:', err);
+      setError(err.message || 'Lỗi khi tải sản phẩm');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
+
   const createProduct = async (payload) => {
-    const newProduct = await productService.create(payload);
-    setProducts(prev => [...prev, newProduct]);
-    return newProduct;
+    try {
+      const newProduct = await productService.create(payload);
+      setProducts(prev => [...prev, newProduct]);
+      return newProduct;
+    } catch (error) {
+      console.error('❌ Error creating product:', error);
+      throw error;
+    }
   };
 
   const updateProduct = async (id, payload) => {
-    const updated = await productService.update(id, payload);
-    setProducts(prev =>
-      prev.map(p => (p.id === id ? updated : p))
-    );
-    return updated;
+    try {
+      const updated = await productService.update(id, payload);
+      setProducts(prev =>
+        prev.map(p => (p.id === id ? updated : p))
+      );
+      return updated;
+    } catch (error) {
+      console.error('❌ Error updating product:', error);
+      throw error;
+    }
   };
 
   const deleteProduct = async (id) => {
-    await productService.remove(id);
-    setProducts(prev => prev.filter(p => p.id !== id));
+    try {
+      await productService.remove(id);
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (error) {
+      console.error('❌ Error deleting product:', error);
+      throw error;
+    }
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // Nếu cần thêm CRUD sau này, bạn có thể hook qua service khác ở đây
-
   return (
     <ProductContext.Provider
       value={{
         products,
         loading,
+        error,
         refetch: fetchProducts,
         createProduct,
         updateProduct,
@@ -62,6 +81,11 @@ export const ProductProvider = ({ children }) => {
   );
 };
 
-/* hook tiện dụng */
 // eslint-disable-next-line react-refresh/only-export-components
-export const useProducts = () => useContext(ProductContext);
+export const useProducts = () => {
+  const context = useContext(ProductContext);
+  if (!context) {
+    throw new Error('useProducts must be used within ProductProvider');
+  }
+  return context;
+};

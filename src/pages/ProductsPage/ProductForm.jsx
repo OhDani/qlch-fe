@@ -1,3 +1,4 @@
+// src/pages/ProductsPage/ProductForm.jsx
 import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductContext } from "../../contexts/ProductContext";
@@ -11,12 +12,12 @@ const ProductForm = () => {
   
   // Check if editing
   const isEditing = !!id;
-  const existingProduct = isEditing ? products.find(p => p.id === parseInt(id)) : null;
+  const existingProduct = isEditing ? products.find(p => p.id.toString() === id) : null;
   
   const [form, setForm] = useState({
     name: existingProduct?.name || "",
     price: existingProduct?.price || "",
-    categoryId: existingProduct?.categoryId || "",
+    categoryId: existingProduct?.categoryId || existingProduct?.category?.id || "",
     description: existingProduct?.description || "",
     quantity: existingProduct?.quantity || ""
   });
@@ -29,7 +30,6 @@ const ProductForm = () => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
     
-    // Xóa lỗi khi user bắt đầu nhập
     if (error) setError("");
     if (success) setSuccess("");
   };
@@ -51,7 +51,7 @@ const ProductForm = () => {
       if (!form.categoryId) {
         throw new Error("Vui lòng chọn danh mục");
       }
-      if (!form.quantity || parseInt(form.quantity) < 0) {
+      if (form.quantity === "" || parseInt(form.quantity) < 0) {
         throw new Error("Số lượng phải lớn hơn hoặc bằng 0");
       }
 
@@ -59,26 +59,25 @@ const ProductForm = () => {
       const productData = {
         name: form.name.trim(),
         price: parseFloat(form.price),
-        categoryId: parseInt(form.categoryId),
+        categoryId: form.categoryId, // Keep as string or convert based on API
         description: form.description.trim(),
         quantity: parseInt(form.quantity)
       };
 
       if (isEditing) {
-        await updateProduct(parseInt(id), productData);
+        await updateProduct(existingProduct.id, productData);
         setSuccess("Cập nhật sản phẩm thành công!");
       } else {
         await createProduct(productData);
         setSuccess("Tạo sản phẩm thành công!");
       }
       
-      // Delay để hiển thị thông báo thành công
       setTimeout(() => {
         navigate("/products");
       }, 1500);
       
     } catch (err) {
-      console.error("Lỗi xử lý sản phẩm:", err);
+      console.error("❌ Lỗi xử lý sản phẩm:", err);
       setError(err.response?.data?.message || err.message || "Có lỗi xảy ra");
     } finally {
       setLoading(false);
@@ -159,6 +158,27 @@ const ProductForm = () => {
               </div>
             )}
 
+            {/* Categories Warning */}
+            {categories.length === 0 && (
+              <div className="mb-6 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg flex items-start gap-3">
+                <svg className="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <div>
+                  <p className="font-medium">Chưa có danh mục nào</p>
+                  <p className="text-sm mt-1">
+                    Bạn cần tạo danh mục trước khi thêm sản phẩm.{" "}
+                    <button 
+                      onClick={() => navigate('/categories')}
+                      className="underline hover:text-yellow-800 font-medium"
+                    >
+                      Đi đến trang danh mục
+                    </button>
+                  </p>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Product Name */}
               <div>
@@ -229,16 +249,17 @@ const ProductForm = () => {
                   required
                 >
                   <option value="">-- Chọn danh mục --</option>
-                  {categories.length > 0 ? (
-                    categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>Không có danh mục nào</option>
-                  )}
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
                 </select>
+                {categories.length === 0 && (
+                  <p className="mt-1 text-sm text-red-600">
+                    Không có danh mục nào. Vui lòng tạo danh mục trước.
+                  </p>
+                )}
               </div>
 
               {/* Description */}
@@ -260,7 +281,7 @@ const ProductForm = () => {
               <div className="flex gap-4 pt-6 border-t border-gray-200">
                 <button
                   type="submit"
-                  disabled={loading || success}
+                  disabled={loading || success || categories.length === 0}
                   className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   {loading ? (
@@ -298,8 +319,8 @@ const ProductForm = () => {
           </div>
         </div>
 
-        {/* Preview Card (if editing) */}
-        {isEditing && existingProduct && (
+        {/* Preview Card */}
+        {(isEditing && existingProduct) && (
           <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">Xem trước sản phẩm</h3>
@@ -313,13 +334,19 @@ const ProductForm = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">{form.name || existingProduct.name}</h4>
-                  <p className="text-sm text-gray-600">{form.description || existingProduct.description}</p>
+                  <p className="text-sm text-gray-600">{form.description || existingProduct.description || 'Chưa có mô tả'}</p>
                   <div className="flex items-center gap-4 mt-1">
                     <span className="font-bold text-indigo-600">
-                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(form.price || existingProduct.price)}
+                      {new Intl.NumberFormat('vi-VN', { 
+                        style: 'currency', 
+                        currency: 'VND' 
+                      }).format(form.price || existingProduct.price)}
                     </span>
                     <span className="text-sm text-gray-500">
                       {form.quantity || existingProduct.quantity} có sẵn
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      • {categories.find(c => c.id.toString() === form.categoryId)?.name || 'Chưa phân loại'}
                     </span>
                   </div>
                 </div>

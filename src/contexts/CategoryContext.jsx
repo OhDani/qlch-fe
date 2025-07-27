@@ -1,3 +1,4 @@
+// src/contexts/CategoryContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { categoryService } from '../services/categoryService';
 
@@ -7,29 +8,32 @@ export const CategoryContext = createContext();
 export const CategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await categoryService.getAll();
+      console.log('🔍 Fetched categories:', data);
+      
+      if (Array.isArray(data)) {
+        setCategories(data);
+      } else {
+        console.error('Categories data is not an array:', data);
+        setCategories([]);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching categories:', error);
+      setError(error.message || 'Lỗi khi tải danh mục');
+      setCategories([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const data = await categoryService.getAll(); // Sử dụng service mới
-        console.log('🔍 Fetched categories:', data); // Debug
-        
-        // Đảm bảo data là array
-        if (Array.isArray(data)) {
-          setCategories(data);
-        } else {
-          console.error('Categories data is not an array:', data);
-          setCategories([]);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        setCategories([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCategories();
   }, []);
 
@@ -39,7 +43,7 @@ export const CategoryProvider = ({ children }) => {
       setCategories(prev => [...prev, newCategory]);
       return newCategory;
     } catch (error) {
-      console.error('Error creating category:', error);
+      console.error('❌ Error creating category:', error);
       throw error;
     }
   };
@@ -52,7 +56,7 @@ export const CategoryProvider = ({ children }) => {
       );
       return updatedCategory;
     } catch (error) {
-      console.error('Error updating category:', error);
+      console.error('❌ Error updating category:', error);
       throw error;
     }
   };
@@ -62,7 +66,7 @@ export const CategoryProvider = ({ children }) => {
       await categoryService.remove(id);
       setCategories(prev => prev.filter(c => c.id !== id));
     } catch (error) {
-      console.error('Error deleting category:', error);
+      console.error('❌ Error deleting category:', error);
       throw error;
     }
   };
@@ -70,9 +74,11 @@ export const CategoryProvider = ({ children }) => {
   const value = {
     categories,
     loading,
+    error,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    refetch: fetchCategories
   };
 
   return (
@@ -82,7 +88,6 @@ export const CategoryProvider = ({ children }) => {
   );
 };
 
-// Hook để sử dụng context
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCategories = () => {
   const context = useContext(CategoryContext);
