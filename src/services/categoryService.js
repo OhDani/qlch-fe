@@ -27,7 +27,7 @@ export const categoryService = {
 
   update: async (id, payload) => {
     try {
-      const { data } = await api.put(`/categories/${id}`, payload);
+      const { data } = await api.patch(`/categories/${id}`, payload);
       return data.data || data;
     } catch (error) {
       console.error('❌ Lỗi update category:', error.response?.data);

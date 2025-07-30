@@ -1,6 +1,7 @@
 // src/pages/ProductsPage/ProductCard.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/common/Button';
 
 const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -67,7 +68,7 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
             </div>
 
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 onClick={handleEdit}
                 className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                 title="Chỉnh sửa"
@@ -75,8 +76,8 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleDelete}
                 disabled={isDeleting}
                 className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
@@ -89,7 +90,7 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -105,17 +106,17 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
       onMouseLeave={() => setShowActions(false)}
     >
       {/* Product Image Placeholder */}
-      <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      {/* <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-gray-400">
           <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
-      </div>
+      </div> */}
 
       {/* Action Buttons Overlay */}
       <div className={`absolute top-3 right-3 flex gap-2 transition-all duration-300 ${showActions ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
-        <button
+        <Button
           onClick={handleEdit}
           className="p-2 bg-white/90 hover:bg-white text-blue-600 hover:text-blue-700 rounded-full shadow-md transition-colors"
           title="Sửa sản phẩm"
@@ -123,9 +124,9 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
-        </button>
+        </Button>
         
-        <button
+        <Button
           onClick={handleDelete}
           disabled={isDeleting}
           className="p-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-full shadow-md transition-colors disabled:opacity-50"
@@ -138,7 +139,7 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Product Info */}
@@ -185,12 +186,12 @@ const ProductCard = ({ product, onDelete, viewMode = 'grid', getCategoryName }) 
             </span>
           </div>
           
-          <button 
+          <Button 
             onClick={() => navigate(`/products/${product.id}`)}
             className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
           >
             Xem chi tiết →
-          </button>
+          </Button>
         </div>
       </div>
     </div>

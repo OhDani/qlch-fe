@@ -23,7 +23,7 @@ export const productService = {
 
   update: async (id, payload) => {
     try {
-      const { data } = await api.put(`/products/${id}`, payload);
+      const { data } = await api.patch(`/products/${id}`, payload);
       return data.data;
     } catch (error) {
       console.error('Lỗi cập nhật sản phẩm:', error);

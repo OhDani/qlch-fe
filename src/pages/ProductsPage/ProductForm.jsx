@@ -3,6 +3,8 @@ import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProductContext } from "../../contexts/ProductContext";
 import { useCategories } from "../../contexts/CategoryContext";
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 
 const ProductForm = () => {
   const navigate = useNavigate();
@@ -109,14 +111,14 @@ const ProductForm = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
-              <button
+              <Button
                 onClick={() => navigate("/products")}
                 className="p-2 text-gray-400 hover:text-gray-600 rounded-lg"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-              </button>
+              </Button>
               <h1 className="text-2xl font-bold text-gray-900">
                 {isEditing ? `Chỉnh sửa "${existingProduct?.name}"` : 'Thêm sản phẩm mới'}
               </h1>
@@ -185,7 +187,7 @@ const ProductForm = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Tên sản phẩm <span className="text-red-500">*</span>
                 </label>
-                <input
+                <Input
                   type="text"
                   name="name"
                   value={form.name}
@@ -204,7 +206,7 @@ const ProductForm = () => {
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-2 text-gray-500">₫</span>
-                    <input
+                    <Input
                       type="number"
                       name="price"
                       value={form.price}
@@ -222,7 +224,7 @@ const ProductForm = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Số lượng <span className="text-red-500">*</span>
                   </label>
-                  <input
+                  <Input
                     type="number"
                     name="quantity"
                     value={form.quantity}
@@ -279,7 +281,7 @@ const ProductForm = () => {
 
               {/* Action Buttons */}
               <div className="flex gap-4 pt-6 border-t border-gray-200">
-                <button
+                <Button
                   type="submit"
                   disabled={loading || success || categories.length === 0}
                   className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -304,16 +306,16 @@ const ProductForm = () => {
                       {isEditing ? "Cập nhật sản phẩm" : "Tạo sản phẩm"}
                     </>
                   )}
-                </button>
+                </Button>
                 
-                <button
+                <Button
                   type="button"
                   onClick={handleCancel}
                   disabled={loading}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   Hủy
-                </button>
+                </Button>
               </div>
             </form>
           </div>

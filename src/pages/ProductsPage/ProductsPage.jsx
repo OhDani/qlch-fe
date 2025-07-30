@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductList from './ProductList';
+import Button from '../../components/common/Button';
 
 const ProductsPage = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const ProductsPage = () => {
               </div>
             </div>
             
-            <button
+            <Button
               onClick={() => navigate('/products/new')}
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
             >
@@ -30,7 +31,7 @@ const ProductsPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Thêm sản phẩm
-            </button>
+            </Button>
           </div>
         </div>
       </div>

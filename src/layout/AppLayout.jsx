@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Button from '../components/common/Button';
 
 const AppLayout = () => {
   const { logout } = useAuth();
@@ -34,12 +35,12 @@ const AppLayout = () => {
               </nav>
             </div>
             
-            <button
+            <Button
               onClick={handleLogout}
               className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Đăng xuất
-            </button>
+            </Button>
           </div>
         </div>
       </header>

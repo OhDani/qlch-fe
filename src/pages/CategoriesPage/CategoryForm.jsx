@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "../../components/common/Button";
 import { useCategories } from "../../contexts/CategoryContext";
-
+import Input from "../../components/common/Input";
 const CategoryForm = ({ initialData = {}, onCancel, onSuccess }) => {
   const { createCategory, updateCategory, loading: contextLoading } = useCategories();
   const [form, setForm] = useState({
@@ -87,7 +87,7 @@ const CategoryForm = ({ initialData = {}, onCancel, onSuccess }) => {
           <label className="block text-sm font-medium mb-2 text-gray-700">
             Tên danh mục <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             type="text"
             name="name"
             value={form.name}

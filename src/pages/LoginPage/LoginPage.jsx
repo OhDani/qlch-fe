@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Input from "../../components/common/Input";
+import Button from '../../components/common/Button';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -56,7 +58,7 @@ export default function LoginPage() {
           <label className="block text-sm font-medium text-slate-600 mb-1">
             Tên đăng nhập
           </label>
-          <input
+          <Input
             name="username"
             value={form.username}
             onChange={handleChange}
@@ -70,7 +72,7 @@ export default function LoginPage() {
           <label className="block text-sm font-medium text-slate-600 mb-1">
             Mật khẩu
           </label>
-          <input
+          <Input
             type="password"
             name="password"
             value={form.password}
@@ -81,7 +83,7 @@ export default function LoginPage() {
           />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={loading}
           className="w-full py-2 px-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -94,7 +96,7 @@ export default function LoginPage() {
           ) : (
             'Đăng nhập'
           )}
-        </button>
+        </Button>
       </form>
     </div>
   );

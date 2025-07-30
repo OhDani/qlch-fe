@@ -3,6 +3,8 @@ import React, { useState, useContext, useMemo } from "react";
 import { ProductContext } from "../../contexts/ProductContext";
 import { useCategories } from "../../contexts/CategoryContext";
 import ProductCard from "./ProductCard";
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 
 const ProductList = () => {
   const { products, deleteProduct, loading } = useContext(ProductContext);
@@ -110,7 +112,7 @@ const ProductList = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <input
+            <Input
               type="text"
               placeholder="Tìm kiếm sản phẩm theo tên hoặc mô tả..."
               value={searchTerm}
@@ -118,14 +120,14 @@ const ProductList = () => {
               className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
             />
             {searchTerm && (
-              <button
+              <Button
                 onClick={() => setSearchTerm('')}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-gray-600"
               >
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -186,7 +188,7 @@ const ProductList = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Hiển thị</label>
             <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
+              <Button
                 onClick={() => setViewMode('grid')}
                 className={`flex-1 flex items-center justify-center gap-2 px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'grid' 
@@ -198,8 +200,8 @@ const ProductList = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
                 Lưới
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setViewMode('list')}
                 className={`flex-1 flex items-center justify-center gap-2 px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                   viewMode === 'list' 
@@ -211,7 +213,7 @@ const ProductList = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
                 Danh sách
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -232,12 +234,12 @@ const ProductList = () => {
                   </svg>
                   Đang lọc
                 </span>
-                <button
+                <Button
                   onClick={clearAllFilters}
                   className="text-sm text-red-600 hover:text-red-700 underline"
                 >
                   Xóa tất cả bộ lọc
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -249,33 +251,33 @@ const ProductList = () => {
             {searchTerm && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                 Tìm kiếm: "{searchTerm}"
-                <button onClick={() => setSearchTerm('')} className="ml-2">
+                <Button onClick={() => setSearchTerm('')} className="ml-2">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                </button>
+                </Button>
               </span>
             )}
             
             {selectedCategory && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                 Danh mục: {getCategoryName(selectedCategory)}
-                <button onClick={() => setSelectedCategory('')} className="ml-2">
+                <Button onClick={() => setSelectedCategory('')} className="ml-2">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                </button>
+                </Button>
               </span>
             )}
             
             {stockFilter && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                 Trạng thái: {stockFilter === 'in-stock' ? 'Còn hàng' : stockFilter === 'low-stock' ? 'Sắp hết' : 'Hết hàng'}
-                <button onClick={() => setStockFilter('')} className="ml-2">
+                <Button onClick={() => setStockFilter('')} className="ml-2">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                </button>
+                </Button>
               </span>
             )}
             
@@ -286,11 +288,11 @@ const ProductList = () => {
                           sortBy === 'price-desc' ? 'Giá cao-thấp' : 
                           sortBy === 'quantity-asc' ? 'SL ít-nhiều' : 
                           sortBy === 'quantity-desc' ? 'SL nhiều-ít' : 'Mới nhất'}
-                <button onClick={() => setSortBy('name-asc')} className="ml-2">
+                <Button onClick={() => setSortBy('name-asc')} className="ml-2">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                </button>
+                </Button>
               </span>
             )}
           </div>
@@ -315,12 +317,12 @@ const ProductList = () => {
             }
           </p>
           {hasActiveFilters && (
-            <button
+            <Button
               onClick={clearAllFilters}
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
             >
               Xóa tất cả bộ lọc
-            </button>
+            </Button>
           )}
         </div>
       ) : (
